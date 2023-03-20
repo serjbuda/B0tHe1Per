@@ -88,8 +88,8 @@ class BotInterface:
         self.show_sort_files_input()
 
     def address_book(self):
-        print("Opening address book...")
-
+        subprocess.Popen(["python", "address_book.py"])
+        
     def notes(self):
         subprocess.Popen(["python", "notes_main.py"])
 
