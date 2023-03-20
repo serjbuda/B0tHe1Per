@@ -2,6 +2,9 @@ import os
 import tkinter as tk
 from file_sorter import FileSorter
 import subprocess
+
+current_process = None
+
 class BotInterface:
     def __init__(self):
         self.root = tk.Tk()
@@ -87,14 +90,31 @@ class BotInterface:
     def sort_files(self):
         self.show_sort_files_input()
 
+    def close_current_process(self):
+        global current_process
+        if current_process:
+            current_process.kill()
+        
     def address_book(self):
-        subprocess.Popen(["python", "address_book.py"])
+        global current_process
+        self.close_current_process() 
+        current_process = subprocess.Popen(["python", "address_book.py"])
         
     def notes(self):
-        subprocess.Popen(["python", "notes_main.py"])
-
-    def exit(self):
+        global current_process
+        self.close_current_process()
+        current_process = subprocess.Popen(["python", "notes_main.py"])
+        
+    def on_closing(self):
+        global current_process
+        if current_process:
+            current_process.kill() 
         self.root.destroy()
+    
+    def exit(self):
+        self.close_current_process()
+        self.root.destroy()
+        
     def run(self):
         self.root.mainloop()
 if __name__ == "__main__":
