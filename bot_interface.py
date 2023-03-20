@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
 from file_sorter import FileSorter
+import subprocess
 class BotInterface:
     def __init__(self):
         self.root = tk.Tk()
@@ -90,7 +91,7 @@ class BotInterface:
         print("Opening address book...")
 
     def notes(self):
-        print("Opening notes...")
+        subprocess.Popen(["python", "notes_main.py"])
 
     def exit(self):
         self.root.destroy()
