@@ -96,10 +96,6 @@ class BotInterface:
         self.root.destroy()
     def run(self):
         self.root.mainloop()
-    def main():
-        bot = BotInterface()
-        bot.run()
 if __name__ == "__main__":
-    main()
-
-
+    bot = BotInterface()
+    bot.run()
