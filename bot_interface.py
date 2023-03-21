@@ -37,15 +37,19 @@ class BotInterface:
         self.input_folder_address = None
         self.label_input_folder_address = None
         self.button_return = None
+        self.button_sort_files = None
+        self.label_no_path_found = None
         
     def show_no_path_found(self):
-        self.label_no_path_found = tk.Label(self.root, text="No path found, try again.", font=("Arial", 20), fg="red", bg="black")
-        self.label_no_path_found.place(x=400, y=500, anchor="center")
-        self.root.after(1000, self.hide_no_path_found)
+        if not self.label_no_path_found:
+            self.label_no_path_found = tk.Label(self.root, text="No path found, try again.", font=("Arial", 20), fg="red", bg="black")
+        self.label_no_path_found.config(text="No path found, try again.")
+        self.button_sort_files.config(text="No path found, try again.", fg="red")
+        self.root.after(1000, self.hide_input_error)
         
-    def hide_no_path_found(self):
+    def hide_input_error(self):
         if hasattr(self, 'label_no_path_found'):
-            self.label_no_path_found.destroy()  
+            self.label_no_path_found.destroy() 
         
     def show_sort_files_input(self):
         self.button_sort.place_forget()
@@ -55,15 +59,17 @@ class BotInterface:
 
         self.input_folder_address = tk.Entry(self.root, font=("Arial", 20), width=45)
         self.input_folder_address.place(x=50, y=400)
-        self.input_folder_address.bind("<Return>", self.process_sort_files_input)
 
         self.label_input_folder_address = tk.Label(self.root, text="Input folder path:", font=("Arial",20), fg="white", bg="black")
         self.label_input_folder_address.place(x=50, y=350)
-        
+
+        self.button_sort_files = tk.Button(self.root, text="Press to sort", font=("Arial", 20), bg="black", fg="white", width=10, command=self.sort_files_by_button)
+        self.button_sort_files.place(x=400, y=500, anchor="center")
+    
         self.button_return = tk.Button(self.root, text="Return to menu", font=("Arial", 20), bg="black", fg="white", command=self.return_to_menu)
         self.button_return.place(x=400, y=750, anchor="center")
-        
-    def process_sort_files_input(self, event):
+
+    def sort_files_by_button(self):
         folder_address = self.input_folder_address.get()
         if os.path.isdir(folder_address):
             sorter = FileSorter(folder_address)
@@ -75,12 +81,16 @@ class BotInterface:
         else:
             self.label_input_folder_address.config(text="No path found, try again.", fg="red")
             self.root.after(1000, self.input_folder_address.delete, 0, tk.END)
-            self.root.after(2000, self.hide_no_path_found)
-        
+            if self.label_no_path_found:
+                self.label_no_path_found.place(x=400, y=550, anchor="center")
+                self.root.after(1000, self.label_no_path_found.place_forget)
+            self.button_sort_files.config(text="Press to sort", fg="white") 
+            
     def return_to_menu(self):
         self.input_folder_address.destroy()
         self.label_input_folder_address.destroy()
         self.button_return.destroy()
+        self.button_sort_files.destroy()
 
         self.button_sort.place(x=400, y=200, anchor="center")
         self.button_address.place(x=400, y=300, anchor="center")
