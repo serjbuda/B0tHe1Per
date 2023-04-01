@@ -2,10 +2,18 @@ import os
 import tkinter as tk
 from file_sorter import FileSorter
 import subprocess
+import abc
 
 current_process = None
 
-class BotInterface:
+class AbstractBotInterface(abc.ABC):
+    @abc.abstractmethod
+    def sort_files(self):
+        pass
+    def abstract_def(self):
+        print('Here is abstract class function')
+
+class BotInterfac(AbstractBotInterface):
     def __init__(self):
         self.root = tk.Tk()
         self.root.geometry("800x1000")
@@ -130,3 +138,4 @@ class BotInterface:
 if __name__ == "__main__":
     bot = BotInterface()
     bot.run()
+    bot.abstract_def()
